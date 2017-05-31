@@ -1,64 +1,72 @@
+'use strict';
 window.Animate = (function(){
-  var fpsInterval, then, startTime, now, elapsed, frameCount;
+  var then, startTime, now, elapsed, frameCount, delta, ticks;
   var stopped = false;
+  var gameCanvas = null;
+  var gameContext = null;
+  var windowFocusControl = false;
+  var redraw = null;
   
-  var requestAnimFrame = (function(){
-    return window.requestAnimationFrame||
-    window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame    ||
-    window.oRequestAnimationFrame      ||
-    window.msRequestAnimationFrame     ||
-    function(callback){
-      window.setTimeout(callback, 1000 / 60);
-    };
-  })();
-    //coordinate animation with elapsed time
-  var animate = function() {
-    // stop
-    if (stop) {
+  var clearCanvas = function (width, height) {
+    gameContext.clearRect(0, 0, width, height);
+  };
+
+  // A cross-browser requestAnimationFrame
+    var requestAnimFrame = (function () {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function (callback) {
+          window.setTimeout(callback, 1000 / 60);
+        };
+    })();
+  
+  //coordinate animation with elapsed time
+  var render = function() {
+    if (stopped) {
       return;
     }
-      // request another frame
-      requestAnimFrame(animate);
-      // calc elapsed time since last loop
+
+    requestAnimFrame(render);
+
+    if (!window.blurred) {//this provides stop animation, if window is inactive
+      //draw and update again and again
+      redraw();
+
       now = Date.now();
-      elapsed = now - then;
-      // if enough time has elapsed, draw the next frame
-      if (elapsed > fpsInterval) {
-        // Get ready for next frame by setting then=now, but...
-        // Also, adjust for fpsInterval not being multiple of 16.67
-        then = now - (elapsed % fpsInterval);
-
-            //draw
-            gameInstance.update();
-            gameInstance.redraw();
-
-            // TESTING...Report #seconds since start and achieved fps.
-            var sinceStart = now - startTime;
-            var currentFps = Math.round(1000 / (sinceStart / ++frameCount) * 100) / 100;
-            console.log("Elapsed time= " + Math.round(sinceStart / 1000 * 100) / 100 + " secs @ " + currentFps + " fps.");
-          }
+      delta = (now - then) / 1000; // Converts to seconds (optional)
+      then = now;
+      ticks = 1 / delta;
+    }
   };
 
-  var startAnimating = function(fps) {
-      fpsInterval = 1000/fps;
-      then = Date.now();
-      startTime = then;
-      console.log(startTime);
-      animate();
-  };
-  var canvasSize = {};
   return {
-    canvasSize: canvasSize,
-    init: function(fps, canvasId){
-      canvas = document.getElementById(canvasId);
-      context = canvas.getContext("2d");
-      canvasSize.w = canvas.width;
-      canvasSize.h = canvas.height;
-      startAnimating(fps);
+    init: function(animationParams){
+      gameCanvas = document.getElementById(animationParams.canvasId);
+      gameContext = gameCanvas.getContext("2d");
+      gameCanvas.width = animationParams.canvasSize.w;
+      gameCanvas.height = animationParams.canvasSize.h;
+      redraw = function(){
+        clearCanvas(gameCanvas.width, gameCanvas.height);
+        animationParams.draw();
+      };
+      if(animationParams.windowFocusControl){
+        UTILS.setWindowBlur();
+      }
     },
-    stop: function(){
+    startAnimation: function(){
+      then = 0;
+      delta = 0;
+      ticks = 0;
+      render();
+    },
+    stopAnimation: function(){
       stopped = true;
+    },
+    getContext: function(){
+      return gameContext;
     }
   };
 })();
