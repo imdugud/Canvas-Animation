@@ -5,7 +5,7 @@ window.Animate = (function(){
   var gameCanvas = null;
   var gameContext = null;
   var windowFocusControl = false;
-  var redraw = null;
+  var update = null;
   
   var clearCanvas = function (width, height) {
     gameContext.clearRect(0, 0, width, height);
@@ -33,7 +33,7 @@ window.Animate = (function(){
 
     if (!window.blurred) {//this provides stop animation, if window is inactive
       //draw and update again and again
-      redraw();
+      update();
 
       now = Date.now();
       delta = (now - then) / 1000; // Converts to seconds (optional)
@@ -48,10 +48,11 @@ window.Animate = (function(){
       gameContext = gameCanvas.getContext("2d");
       gameCanvas.width = animationParams.canvasSize.w;
       gameCanvas.height = animationParams.canvasSize.h;
-      redraw = function(){
+      update = function(){
         clearCanvas(gameCanvas.width, gameCanvas.height);
-        animationParams.draw();
+        animationParams.update();
       };
+      Draw.setContext(gameContext);
       if(animationParams.windowFocusControl){
         UTILS.setWindowBlur();
       }

@@ -1,41 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Dilly Game</title>
-	<style type="text/css">
-		canvas{
-			
-		}
-	</style>
+    <title>Animation</title>
+    <style type="text/css">
+        canvas {
+
+        }
+    </style>
 </head>
 <body>
-	<canvas id="Game-Canvas"></canvas>
-    <script src="utils.js"></script>
-    <script src="animate.js"></script>
-    <script src="game.js"></script>
-	<script type="text/javascript">
-	'use strict';
-	var context = null;
-	function meDraw () {
-		var val = UTILS.randomIntFromInterval(0,2);
-		context.beginPath();
-      context.arc(10+val, 10+val, 5, 0, 2 * Math.PI, false);
-      context.fillStyle = 'green';
-      context.fill();
-      context.lineWidth = 5;
-      context.strokeStyle = '#003300';
-      context.stroke();
-	}
+<canvas id="Game-Canvas"></canvas>
+<script src="utils.js"></script>
+<script src="draw.js"></script>
+<script src="animate.js"></script>
+<script src="game.js"></script>
+<script type="text/javascript">
+    'use strict';
+    var context = null;
+    function meUpdate() {
+        var val = UTILS.randomIntFromInterval(0, 500);
+        var val2 = UTILS.randomIntFromInterval(0, 500);
+        Draw.line({x:val,y:val2},{x:val2,y:val},5,'red');
+    }
+
+
     window.Animate.init({
-       	canvasId: 'Game-Canvas',
-       	windowFocusControl: true,
-       	draw: meDraw,
-       	canvasSize: {w: 500, h: 500}
+        canvasId: 'Game-Canvas',
+        windowFocusControl: true,
+        update: meUpdate,
+        canvasSize: {w: 500, h: 500}
     });
     context = window.Animate.getContext();
+    //drawing
     window.Animate.startAnimation();
 
-	</script>
-	
+</script>
+
 </body>
 </html>
