@@ -18,6 +18,19 @@ var Draw = (function(){
     },
     triangle: function () {
 
+    },
+    tree: function(startX, startY, height, angle){
+      if (height <= 10) {
+        return;
+      }
+      Draw.line(
+        {x:0, y:0},
+        {x:startX, y:startY - height},
+        5,
+        'brown',
+        angle);
+      Draw.tree(0, -height, height/2, -30);
+      Draw.tree(0, -height, height/2, 30);
     }
   };
 })();

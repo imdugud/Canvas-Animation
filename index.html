@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Animation</title>
+    <style type="text/css">
+        canvas {
+
+        }
+    </style>
+</head>
+<body>
+<canvas id="Game-Canvas"></canvas>
+<script src="utils.js"></script>
+<script src="draw.js"></script>
+<script src="animate.js"></script>
+<script src="game.js"></script>
+<script src="branch.js"></script>
+<script type="text/javascript">
+    'use strict';
+    var context = null;
+    var bra = new Branch();
+        bra.init();
+
+    function meUpdate() {
+        
+    }
+
+
+    window.Animate.init({
+        canvasId: 'Game-Canvas',
+        windowFocusControl: true,
+        update: meUpdate,
+        canvasSize: {w: 500, h: 500}
+    });
+    context = window.Animate.getContext();
+    //drawing
+    window.Animate.startAnimation();
+
+</script>
+
+</body>
+</html>

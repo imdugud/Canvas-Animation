@@ -9,5 +9,13 @@ UTILS = {
 	    window.onfocus = function () {
 	    	window.blurred = false;
 	    };  
+    },
+    factorial: function (n){
+  		if (n === 0) {
+    		return 1;
+  		}
+  
+  	// This is it! Recursion!!
+  		return n * UTILS.factorial(n - 1);
     }
 };
