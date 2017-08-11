@@ -52,6 +52,7 @@ window.Animate = (function(){
         clearCanvas(gameCanvas.width, gameCanvas.height);
         animationParams.update();
       };
+
       Draw.setContext(gameContext);
       if(animationParams.windowFocusControl){
         UTILS.setWindowBlur();
